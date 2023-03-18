@@ -1,0 +1,858 @@
+{
+  "version": "0.1.3",
+  "name": "agora_court",
+  "instructions": [
+    {
+      "name": "interact",
+      "accounts": [
+        {
+          "name": "dispute",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "repVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "payVault",
+          "isMut": true,
+          "isSigner": false,
+          "isOptional": true
+        },
+        {
+          "name": "record",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "court",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "courtAuthority",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "userPayAta",
+          "isMut": true,
+          "isSigner": false,
+          "isOptional": true
+        },
+        {
+          "name": "userRepAta",
+          "isMut": true,
+          "isSigner": false,
+          "isOptional": true
+        },
+        {
+          "name": "repMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "payMint",
+          "isMut": false,
+          "isSigner": false,
+          "isOptional": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "disputeId",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "claim",
+      "accounts": [
+        {
+          "name": "voterRecord",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "dispute",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "repVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "payVault",
+          "isMut": true,
+          "isSigner": false,
+          "isOptional": true
+        },
+        {
+          "name": "court",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "courtAuthority",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "userPayAta",
+          "isMut": true,
+          "isSigner": false,
+          "isOptional": true
+        },
+        {
+          "name": "userRepAta",
+          "isMut": true,
+          "isSigner": false,
+          "isOptional": true
+        },
+        {
+          "name": "repMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "payMint",
+          "isMut": false,
+          "isSigner": false,
+          "isOptional": true
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "disputeId",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "closeDispute",
+      "accounts": [
+        {
+          "name": "dispute",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "court",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        }
+      ],
+      "args": [
+        {
+          "name": "disputeId",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "initializeCase",
+      "accounts": [
+        {
+          "name": "case",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "voterRecord",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "dispute",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "court",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "courtAuthority",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "disputeId",
+          "type": "u64"
+        },
+        {
+          "name": "evidence",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "initializeCourt",
+      "accounts": [
+        {
+          "name": "court",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "protocol",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "reputationMint",
+          "type": "publicKey"
+        },
+        {
+          "name": "paymentMint",
+          "type": {
+            "option": "publicKey"
+          }
+        },
+        {
+          "name": "maxDisputeVotes",
+          "type": "u16"
+        }
+      ]
+    },
+    {
+      "name": "initializeDispute",
+      "accounts": [
+        {
+          "name": "dispute",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "repVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "payVault",
+          "isMut": true,
+          "isSigner": false,
+          "isOptional": true
+        },
+        {
+          "name": "court",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "protocol",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "protocolPayAta",
+          "isMut": true,
+          "isSigner": false,
+          "isOptional": true
+        },
+        {
+          "name": "protocolRepAta",
+          "isMut": true,
+          "isSigner": false,
+          "isOptional": true
+        },
+        {
+          "name": "repMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "payMint",
+          "isMut": false,
+          "isSigner": false,
+          "isOptional": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "users",
+          "type": {
+            "vec": {
+              "option": "publicKey"
+            }
+          }
+        },
+        {
+          "name": "config",
+          "type": {
+            "defined": "DisputeConfiguration"
+          }
+        }
+      ]
+    },
+    {
+      "name": "initializeRecord",
+      "accounts": [
+        {
+          "name": "record",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "court",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "courtAuthority",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "vote",
+      "accounts": [
+        {
+          "name": "case",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "voterRecord",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "dispute",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "repVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "court",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "courtAuthority",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "userRepAta",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "repMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "disputeId",
+          "type": "u64"
+        },
+        {
+          "name": "userCase",
+          "type": "publicKey"
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "Case",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "votes",
+            "type": "u64"
+          },
+          {
+            "name": "evidence",
+            "type": "string"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Court",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "repMint",
+            "type": "publicKey"
+          },
+          {
+            "name": "payMint",
+            "type": {
+              "option": "publicKey"
+            }
+          },
+          {
+            "name": "numDisputes",
+            "type": "u64"
+          },
+          {
+            "name": "maxDisputeVotes",
+            "type": "u16"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Dispute",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "users",
+            "type": {
+              "vec": {
+                "option": "publicKey"
+              }
+            }
+          },
+          {
+            "name": "status",
+            "type": {
+              "defined": "DisputeStatus"
+            }
+          },
+          {
+            "name": "interactions",
+            "type": "u8"
+          },
+          {
+            "name": "submittedCases",
+            "type": "u8"
+          },
+          {
+            "name": "votes",
+            "type": "u64"
+          },
+          {
+            "name": "leader",
+            "type": {
+              "defined": "CaseLeader"
+            }
+          },
+          {
+            "name": "config",
+            "type": {
+              "defined": "DisputeConfiguration"
+            }
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "VoterRecord",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "claimQueue",
+            "type": {
+              "vec": {
+                "defined": "DisputeRecord"
+              }
+            }
+          },
+          {
+            "name": "currentlyStakedRep",
+            "type": "u64"
+          },
+          {
+            "name": "currentlyStakedPay",
+            "type": "u64"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    }
+  ],
+  "types": [
+    {
+      "name": "DisputeConfiguration",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "graceEndsAt",
+            "type": "i64"
+          },
+          {
+            "name": "initCasesEndsAt",
+            "type": "i64"
+          },
+          {
+            "name": "endsAt",
+            "type": "i64"
+          },
+          {
+            "name": "voterRepRequired",
+            "type": "u64"
+          },
+          {
+            "name": "voterRepCost",
+            "type": "u64"
+          },
+          {
+            "name": "repCost",
+            "type": "u64"
+          },
+          {
+            "name": "payCost",
+            "type": "u64"
+          },
+          {
+            "name": "minVotes",
+            "type": "u64"
+          },
+          {
+            "name": "protocolPay",
+            "type": "u64"
+          },
+          {
+            "name": "protocolRep",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "CaseLeader",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "user",
+            "type": "publicKey"
+          },
+          {
+            "name": "votes",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "DisputeRecord",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "disputeId",
+            "type": "u64"
+          },
+          {
+            "name": "disputeEndTime",
+            "type": "i64"
+          },
+          {
+            "name": "userVotedFor",
+            "type": "publicKey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "DisputeStatus",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "Grace"
+          },
+          {
+            "name": "Waiting"
+          },
+          {
+            "name": "Voting"
+          },
+          {
+            "name": "Concluded",
+            "fields": [
+              {
+                "name": "winner",
+                "type": {
+                  "option": "publicKey"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "InvalidCourtAuthority",
+      "msg": "Invalid court authority"
+    },
+    {
+      "code": 6001,
+      "name": "InvalidEndTime",
+      "msg": "Invalid end time"
+    },
+    {
+      "code": 6002,
+      "name": "DisputeDoesNotContainPayer",
+      "msg": "Dispute does not contain payer"
+    },
+    {
+      "code": 6003,
+      "name": "UserDoesNotHaveCase",
+      "msg": "User does not have a case in this dispute"
+    },
+    {
+      "code": 6004,
+      "name": "DisputeNotVotable",
+      "msg": "Dispute is not currently votable"
+    },
+    {
+      "code": 6005,
+      "name": "DisputeNotFinalizable",
+      "msg": "Dispute is not finalizable"
+    },
+    {
+      "code": 6006,
+      "name": "DisputeNotInValidCourt",
+      "msg": "Dispute not in valid court"
+    },
+    {
+      "code": 6007,
+      "name": "DisputeNotClaimable",
+      "msg": "Dispute not claimable"
+    },
+    {
+      "code": 6008,
+      "name": "CasesNoLongerCanBeSubmitted",
+      "msg": "Cases no longer can be submitted"
+    },
+    {
+      "code": 6009,
+      "name": "UsersEmpty",
+      "msg": "Must include at least one user"
+    },
+    {
+      "code": 6010,
+      "name": "UserAlreadyVoted",
+      "msg": "User already voted in this dispute"
+    },
+    {
+      "code": 6011,
+      "name": "UserDoesNotHaveEnoughReputation",
+      "msg": "User does not have enough reputation to vote"
+    },
+    {
+      "code": 6012,
+      "name": "UserHasUnclaimedDisputes",
+      "msg": "User has unclaimed disputes"
+    },
+    {
+      "code": 6013,
+      "name": "UserHasNoUnclaimedDisputes",
+      "msg": "User has no unclaimed disputes"
+    },
+    {
+      "code": 6014,
+      "name": "UserMaxDisputesReached",
+      "msg": "User is participating in a max of "
+    },
+    {
+      "code": 6015,
+      "name": "UserCannotClaimDispute",
+      "msg": "User cannot claim dispute"
+    },
+    {
+      "code": 6016,
+      "name": "UserAlreadyProvidedCase",
+      "msg": "User already provided their case."
+    },
+    {
+      "code": 6017,
+      "name": "InteractionPeriodEnded",
+      "msg": "The interaction period is over. Users may no longer interact as part of this dispute."
+    },
+    {
+      "code": 6018,
+      "name": "InteractionsFulfilled",
+      "msg": "All users have already interacted with this dispute."
+    },
+    {
+      "code": 6019,
+      "name": "ReputationAtaMissing",
+      "msg": "Reputation token payment was specified, but reputation ATA was not provided."
+    },
+    {
+      "code": 6020,
+      "name": "PaymentAtaMissing",
+      "msg": "Pay token payment was specified, but either the payment ATA was not provided or the court does not accept a pay token mint."
+    },
+    {
+      "code": 6021,
+      "name": "ProtocolMintMismatch",
+      "msg": "Provided mint account does not match protocol's initialized mint."
+    },
+    {
+      "code": 6022,
+      "name": "ReputationMintMismatch",
+      "msg": "Reputation mint does not match mint specified in court."
+    },
+    {
+      "code": 6023,
+      "name": "UserNotAuthorized",
+      "msg": "Signer is not authorized by the protocol to interact."
+    }
+  ],
+  "metadata": {
+    "address": "Benri2piS4b4h5S54uaMRybuhhZtbM4L3zofhd3Y9FXv"
+  }
+}

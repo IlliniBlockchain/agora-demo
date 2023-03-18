@@ -18,10 +18,14 @@ import axios from "axios";
 import FormData from "form-data";
 import createSubmission from "../utils/create-submission";
 import { toast } from "react-toastify";
+import { useAnchorWallet, useConnection } from '@solana/wallet-adapter-react';
 
 const Header = () => {
   const [popup, setPopup] = useState(false);
   const [image, setImage] = useState("");
+
+  const {connection} = useConnection();
+  const wallet = useAnchorWallet();
 
   const name = useRef();
   const address = useRef();
@@ -69,7 +73,7 @@ const Header = () => {
         .data;
       let logoURL = `https://agora-courts.infura-ipfs.io/ipfs/${cid}`;
 
-      await createSubmission(name, address, ticker, description, logoURL);
+      await createSubmission(name.current.value, address.current.value, ticker.current.value, description.current.value, logoURL, connection, wallet);
 
       toast.success("Token successfully submitted.", {
         position: "top-right",
@@ -179,7 +183,7 @@ const Header = () => {
                 </div>
                 <h2 className="text-black text-lg font-bold flex justify-between">
                   <span>Deposit Due:</span>
-                  <span>13 SOL</span>
+                  <span>10 AGORA</span>
                 </h2>
                 <Alert color="info">
                   <span>

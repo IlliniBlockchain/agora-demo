@@ -1,24 +1,59 @@
 // Return all tokens to be displayed on the home page
+import {AnchorProvider} from '@coral-xyz/anchor';
+import getDemoProgram from './get-demo-program';
+import { PublicKey } from '@solana/web3.js';
+import * as anchor from '@coral-xyz/anchor';
 
-export default async function getTokens() {
+export default async function getTokens(connection, wallet) {
   // data must be returned in this EXACT format
-  return [
-    {
-      address: '0xaisudfhgask', // seed to pda in demo contract
-      image: "https://s2.coinmarketcap.com/static/img/coins/200x200/11165.png",
-      name: "Orca Protocol",
-      ticker: "ORCA",
-      description:
-        "Token utilized by Orca for governance, staking rewards, and boosted earnings on the platform.",
-      badges: ["Verified", "Token-2022 Compliant"],
-    },
-    {
-      address: '0xr7iugyrd7h',
-      image: "https://s2.coinmarketcap.com/static/img/coins/200x200/3408.png",
-      name: "Circle",
-      ticker: "USDC",
-      description: "Hopefully SVB going bankrupt doesn't make this go to zero lol.",
-      badges: ["Verified", "Stablecoin Compliant"],
-    },
-  ];
+  //all functions
+  const commitment = "processed";
+  const provider = new AnchorProvider(connection, wallet, { preflightCommitment: commitment });
+  //---------
+
+  const demoProgram = await getDemoProgram(provider);
+
+  let arr = [];
+
+  //get protocol acc
+  const [protocolPDA, ] = PublicKey
+      .findProgramAddressSync(
+          [
+              anchor.utils.bytes.utf8.encode("protocol")
+          ],
+          demoProgram.programId
+      );
+
+  let protState = await demoProgram.account.protocol.fetch(protocolPDA);
+  
+  //loop through ticker accounts
+  for (let i = 0; i < protState.numTickers; i++) {
+    //grab PDA
+    const [tickerAccPDA, ] = PublicKey
+        .findProgramAddressSync(
+            [
+                anchor.utils.bytes.utf8.encode("ticker"),
+                new Uint8Array([i])
+            ],
+            demoProgram.programId
+        );
+
+    let tickerState = await demoProgram.account.ticker.fetch(tickerAccPDA);
+
+    arr.push({
+      address: tickerState.address,
+      image: tickerState.image,
+      name: tickerState.name,
+      ticker: tickerState.ticker,
+      description: tickerState.description,
+      badges: tickerState.badges,
+      id: i, //for querying dispute PDA
+    })
+  }
+
+  console.log(arr);
+
+  //return array
+
+  return arr;
 }

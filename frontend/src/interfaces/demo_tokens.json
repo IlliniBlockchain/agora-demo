@@ -1,0 +1,262 @@
+{
+  "version": "0.1.0",
+  "name": "demo_tokens",
+  "instructions": [
+    {
+      "name": "initialize",
+      "accounts": [
+        {
+          "name": "protocol",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "repMint",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "createCourt",
+      "accounts": [
+        {
+          "name": "protocol",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "repMint",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "courtPda",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "agoraProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "submitToken",
+      "accounts": [
+        {
+          "name": "protocol",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "repMint",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tickerAcc",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "courtPda",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "disputePda",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "repVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "protocolRepAta",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "agoraProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "address",
+          "type": "string"
+        },
+        {
+          "name": "image",
+          "type": "string"
+        },
+        {
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "ticker",
+          "type": "string"
+        },
+        {
+          "name": "description",
+          "type": "string"
+        },
+        {
+          "name": "badges",
+          "type": {
+            "vec": "string"
+          }
+        }
+      ]
+    },
+    {
+      "name": "receiveTokens",
+      "accounts": [
+        {
+          "name": "protocol",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "repMint",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "tokenAcc",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    }
+  ],
+  "accounts": [
+    {
+      "name": "Protocol",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "bump",
+            "type": "u8"
+          },
+          {
+            "name": "numTickers",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Ticker",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "address",
+            "type": "string"
+          },
+          {
+            "name": "image",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "ticker",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "badges",
+            "type": {
+              "vec": "string"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "metadata": {
+    "address": "8oxb3Kg4kda7LCJoSUVHAZhoqWjmBiLnGZeCyUkJJ22L"
+  }
+}

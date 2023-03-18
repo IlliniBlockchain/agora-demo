@@ -21,28 +21,35 @@ import getToken from "../utils/get-token";
 import vote from "../utils/vote";
 import challenge from "../utils/challenge";
 import isChallenged from "../utils/is-challenged";
+import initCase from "../utils/case";
 import { useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
+import { useAnchorWallet, useConnection } from '@solana/wallet-adapter-react';
 
 const Token = () => {
   const [token, setTkn] = useState({});
   const [popup, setPopup] = useState(false);
   const [challengePopup, setCPopup] = useState(false);
   const description = useRef();
+  const challengeDescription = useRef();
+
+  const {connection} = useConnection();
+  const wallet = useAnchorWallet();
 
   let location = useLocation();
+  const id = location.state.id;
   const address = location.pathname.split("/")[2];
 
   useEffect(() => {
     (async () => {
-      setTkn(await getToken(address));
-      setCPopup(await isChallenged(address));
+      setTkn(await getToken(id, connection, wallet));
+      setCPopup(await isChallenged(id, connection, wallet));
     })();
   }, []);
 
   const handleVote = async (optionNo) => {
     try {
-      await vote(optionNo);
+      await vote(optionNo, id, connection, wallet);
 
       toast.success("Voting successful.", {
         position: "top-right",
@@ -61,6 +68,39 @@ const Token = () => {
 
   const handleSubmit = async () => {
     try {
+      if (challengeDescription.current.value === "") {
+        toast.error("Please provide a description.", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        return;
+      }
+
+      await challenge(id, challengeDescription.current.value, connection, wallet);
+
+      toast.success("Challenge successfully submitted.", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    } catch (err) {
+      alert(err);
+    }
+  };
+
+  const handleCase = async () => {
+    try {
       if (description.current.value === "") {
         toast.error("Please provide a description.", {
           position: "top-right",
@@ -75,7 +115,7 @@ const Token = () => {
         return;
       }
 
-      await challenge(token.disputeId);
+      await initCase(id, description.current.value, connection, wallet);
 
       toast.success("Challenge successfully submitted.", {
         position: "top-right",
@@ -107,7 +147,7 @@ const Token = () => {
         <div className="flex flex-wrap gap-3 mt-7">
           <div>
             <Button
-              href={`https://explorer.solana.com/address/${address}`}
+              href={`https://explorer.solana.com/address/${address}?cluster=devnet`}
               target="_blank"
             >
               View in Explorer
@@ -146,13 +186,13 @@ const Token = () => {
                       placeholder="Write about your reason for challenging..."
                       required={true}
                       rows={4}
-                      ref={description}
+                      ref={challengeDescription}
                     />
                   </div>
 
                   <h2 className="text-black text-lg font-bold flex justify-between">
                     <span>Deposit Due:</span>
-                    <span>13 SOL</span>
+                    <span>10 AGORA</span>
                   </h2>
                   <Alert color="info">
                     <span>
@@ -278,7 +318,7 @@ const Token = () => {
               </div>
 
               <div className="w-full">
-                <Button onClick={handleSubmit}>Submit case</Button>
+                <Button onClick={handleCase}>Submit case</Button>
               </div>
             </div>
           </Modal.Body>

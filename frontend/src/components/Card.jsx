@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 const Card = ({ token }) => {
   return (
-    <Link to={`/token/${token.address}`} className="max-w-xs cursor-pointer">
+    <Link to={`/token/${token.address}`} state={{id: token.id}} className="max-w-xs cursor-pointer">
       <FCard imgSrc={token.image}>
         <h5 className="text-xl font-bold tracking-tight text-gray-900 dark:text-white">
           ${token.ticker} by {token.name}
