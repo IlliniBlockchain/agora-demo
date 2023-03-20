@@ -1,4 +1,6 @@
-# Agora Token Demo
+# Agora Tokens
+![image](https://user-images.githubusercontent.com/54857388/226242118-99630809-a1a4-4d5f-bd89-c0b0ead82179.png)
+
 This is a simple demo of a protocol that has implemented [Agora Courts](https://github.com/IlliniBlockchain/agora-courts). The contract behind the frontend can be found in the original repository, under demo_tokens. 
 The contract works with a CPI into multiple instructions from the court contract, including `initialize_dispute`, which can be configured by the protocol with a plethora of settings. 
 Our demo abstracts all requirements so anyone can use it - tokens are simply minted to the user upon each call to showcase functionality.
