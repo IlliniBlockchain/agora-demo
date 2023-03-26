@@ -205,8 +205,8 @@ const Header = () => {
         <Navbar.Link href="/" active={location.pathname == "/"}>
           Home
         </Navbar.Link>
-        <Navbar.Link href="/navbars">Tutorial</Navbar.Link>
-        <Navbar.Link href="/navbars">Criteria</Navbar.Link>
+        <Navbar.Link href="https://docs.agoracourts.com/products/agora-tokens" target="_blank">Tutorial</Navbar.Link>
+        <Navbar.Link href="https://docs.agoracourts.com/products/agora-tokens/token-criteria" target="_blank">Criteria</Navbar.Link>
         <Navbar.Link
           href="/claim"
           active={location.pathname == "/claim"}

@@ -3,10 +3,10 @@ import { Link } from "react-router-dom";
 
 const Card = ({ token }) => {
   return (
-    <Link to={`/token/${token.address}`} state={{id: token.id}} className="max-w-xs cursor-pointer">
+    <Link to={`/token/${token.id}`} className="max-w-xs cursor-pointer">
       <FCard imgSrc={token.image}>
         <h5 className="text-xl font-bold tracking-tight text-gray-900 dark:text-white">
-          ${token.ticker} by {token.name}
+          {token.ticker} by {token.name}
         </h5>
         <p className="text-sm text-gray-700 dark:text-gray-400">
           {token.description}
@@ -26,7 +26,7 @@ const Card = ({ token }) => {
             }
 
             return (
-              <Badge color={color} className="w-fit" size="sm">
+              <Badge color={color} className="w-fit" size="sm" key={badge}>
                 {badge}
               </Badge>
             );

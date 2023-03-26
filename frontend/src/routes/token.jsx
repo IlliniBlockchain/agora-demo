@@ -37,8 +37,7 @@ const Token = () => {
   const wallet = useAnchorWallet();
 
   let location = useLocation();
-  const id = location.state.id;
-  const address = location.pathname.split("/")[2];
+  const id = location.pathname.split("/")[2];
 
   useEffect(() => {
     (async () => {
@@ -50,7 +49,7 @@ const Token = () => {
   const handleVote = async (optionNo) => {
     try {
       await vote(optionNo, id, connection, wallet);
-
+      
       toast.success("Voting successful.", {
         position: "top-right",
         autoClose: 5000,
@@ -83,6 +82,7 @@ const Token = () => {
       }
 
       await challenge(id, challengeDescription.current.value, connection, wallet);
+      setTkn(await getToken(id, connection, wallet));
 
       toast.success("Challenge successfully submitted.", {
         position: "top-right",
@@ -116,8 +116,9 @@ const Token = () => {
       }
 
       await initCase(id, description.current.value, connection, wallet);
-
-      toast.success("Challenge successfully submitted.", {
+      setTkn(await getToken(id, connection, wallet));
+      
+      toast.success("Response successfully submitted.", {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
@@ -134,10 +135,10 @@ const Token = () => {
 
   return (
     <div className="flex text-black justify-center">
-      <div className="max-w-md mr-8">
+      <div className="max-w-xl mr-8">
         <Card horizontal={true} imgSrc={token.image}>
           <h5 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-            ${token.ticker} by {token.name}
+            {token.ticker} by {token.name}
           </h5>
           <p className="font-normal text-gray-700 dark:text-gray-400">
             {token.description}
@@ -147,7 +148,7 @@ const Token = () => {
         <div className="flex flex-wrap gap-3 mt-7">
           <div>
             <Button
-              href={`https://explorer.solana.com/address/${address}?cluster=devnet`}
+              href={`https://explorer.solana.com/address/${token.address}`}
               target="_blank"
             >
               View in Explorer
@@ -256,7 +257,7 @@ const Token = () => {
         <div className="mt-5 flex gap-3">
           <Badge icon={QuestionMarkCircleIcon}>{token.status}</Badge>
           <Badge color="pink" icon={ClockIcon}>
-            Challenge Deadline: {token.end_time}
+            Deadline: {token.end_time}
           </Badge>
           <Badge color="gray" icon={UserIcon}>
             Requester:{" "}

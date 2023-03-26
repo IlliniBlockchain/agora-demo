@@ -1,7 +1,7 @@
 import { Dropdown, TextInput} from 'flowbite-react'
 import { MagnifyingGlassIcon } from '@heroicons/react/24/solid'
 
-const Searchbar = () => {
+const Searchbar = ({setQ, setfQ}) => {
     return (
       <div className='grid grid-cols-6 justify-items-end'>
         <TextInput
@@ -11,10 +11,10 @@ const Searchbar = () => {
           icon={MagnifyingGlassIcon}
           placeholder="Search tokens..."
           required={true}
+          onChange={(e) => setQ(e.target.value)}
         />
         <Dropdown
           label="Filter By"
-          dismissOnClick={false}
         >
           <Dropdown.Item>
             Verified

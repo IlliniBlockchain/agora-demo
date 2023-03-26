@@ -27,7 +27,7 @@ export default async function getTokens(connection, wallet) {
   let protState = await demoProgram.account.protocol.fetch(protocolPDA);
   
   //loop through ticker accounts
-  for (let i = 0; i < protState.numTickers; i++) {
+  for (let i = protState.numTickers - 1; i >= 0; i--) {
     //grab PDA
     const [tickerAccPDA, ] = PublicKey
         .findProgramAddressSync(
@@ -41,7 +41,6 @@ export default async function getTokens(connection, wallet) {
     let tickerState = await demoProgram.account.ticker.fetch(tickerAccPDA);
 
     arr.push({
-      address: tickerState.address,
       image: tickerState.image,
       name: tickerState.name,
       ticker: tickerState.ticker,
