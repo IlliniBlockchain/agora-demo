@@ -1,12 +1,12 @@
-// Return a specific tokens details
 import { AnchorProvider } from "@coral-xyz/anchor";
 import getAgoraProgram from "./get-agora-program";
 import { LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
 import * as anchor from "@coral-xyz/anchor";
 import getDemoProgram from "./get-demo-program";
 import { Buffer } from "buffer";
-import getDisputeStatus from './get-dispute-status'
+import getDisputeStatus from "./get-dispute-status";
 
+// Return a specific tokens details
 export default async function getToken(id, connection, wallet) {
   const commitment = "processed";
   const provider = new AnchorProvider(connection, wallet, {
@@ -43,10 +43,7 @@ export default async function getToken(id, connection, wallet) {
   );
 
   let disputeState = await agoraProgram.account.dispute.fetch(disputePDA);
-  let courtState = await agoraProgram.account.court.fetch(courtPDA);
   let tickerState = await demoProgram.account.ticker.fetch(tickerAccPDA);
-
-  console.log(disputeState.status);
 
   //get cases
   let cases = [];
@@ -74,8 +71,6 @@ export default async function getToken(id, connection, wallet) {
       }
     }
   }
-
-  console.log(disputeState);
 
   let solPool =
     disputeState.users.length * disputeState.config.payCost.toNumber() +
@@ -122,6 +117,6 @@ export default async function getToken(id, connection, wallet) {
     end_time: dt,
     requester: "FRX2QB33XRWuQfR6Ehb4YWWW6ihurNNDqYhL12XvzeKG",
     cases: cases,
-    address: tickerState.address
+    address: tickerState.address,
   };
 }

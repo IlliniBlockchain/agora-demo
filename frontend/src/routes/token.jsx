@@ -21,7 +21,7 @@ import getToken from "../utils/get-token";
 import vote from "../utils/vote";
 import challenge from "../utils/challenge";
 import isChallenged from "../utils/is-challenged";
-import initCase from "../utils/case";
+import initCase from "../utils/init-case";
 import { useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useAnchorWallet, useConnection } from '@solana/wallet-adapter-react';

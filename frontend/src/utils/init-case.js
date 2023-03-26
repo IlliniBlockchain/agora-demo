@@ -1,20 +1,24 @@
 import { WalletNotConnectedError } from "@solana/wallet-adapter-base";
 import * as anchor from "@coral-xyz/anchor";
+import { SystemProgram, PublicKey } from "@solana/web3.js";
 import { AnchorProvider } from "@coral-xyz/anchor";
-import { PublicKey } from "@solana/web3.js";
 import getDemoProgram from "./get-demo-program";
 import getAgoraProgram from "./get-agora-program";
 import { Buffer } from "buffer";
 
-// Determine whether a submitter needs to respond to a challenge
-export default async function isChallenged(disputeId, connection, wallet) {
+// Add a party's case to a dispute
+export default async function initCase(
+  disputeId,
+  description,
+  connection,
+  wallet
+) {
   const commitment = "processed";
   if (!wallet || !wallet.publicKey) throw new WalletNotConnectedError();
   const provider = new AnchorProvider(connection, wallet, {
     preflightCommitment: commitment,
   });
-
-  let id_bn = new anchor.BN(disputeId);
+  anchor.setProvider(provider);
 
   const demoProgram = await getDemoProgram(provider);
   const agoraProgram = await getAgoraProgram(provider);
@@ -29,6 +33,8 @@ export default async function isChallenged(disputeId, connection, wallet) {
     agoraProgram.programId
   );
 
+  let id_bn = new anchor.BN(disputeId);
+
   const [disputePDA] = PublicKey.findProgramAddressSync(
     [
       anchor.utils.bytes.utf8.encode("dispute"),
@@ -38,39 +44,35 @@ export default async function isChallenged(disputeId, connection, wallet) {
     agoraProgram.programId
   );
 
-  let disputeState = await agoraProgram.account.dispute.fetch(disputePDA);
-  let present = false;
-  let cases = [];
-  for (let i = 0; i < disputeState.users.length; i++) {
-    let user = disputeState.users[i];
-    if (user != null) {
-      if (user.toString() == provider.publicKey.toString()) {
-        present = true;
-      }
-      const [casePDA] = PublicKey.findProgramAddressSync(
-        [
-          anchor.utils.bytes.utf8.encode("case"),
-          disputePDA.toBuffer(),
-          user.toBuffer(),
-        ],
-        agoraProgram.programId
-      );
+  const [recordPDA] = PublicKey.findProgramAddressSync(
+    [
+      anchor.utils.bytes.utf8.encode("record"),
+      courtPDA.toBuffer(),
+      provider.publicKey.toBuffer(),
+    ],
+    agoraProgram.programId
+  );
 
-      const receiver = await connection.getAccountInfo(casePDA);
+  const [casePDA] = PublicKey.findProgramAddressSync(
+    [
+      anchor.utils.bytes.utf8.encode("case"),
+      disputePDA.toBuffer(),
+      provider.publicKey.toBuffer(),
+    ],
+    agoraProgram.programId
+  );
 
-      if (receiver != null) {
-        if (user.toString() == provider.publicKey.toString()) {
-          throw TypeError("Already challenged.");
-        } else {
-          cases.push(user);
-        }
-      }
-    }
-  }
-
-  if (cases.length > 0 && present) {
-    return true;
-  }
-
-  return false;
+  //finally init case
+  await agoraProgram.methods
+    .initializeCase(id_bn, description)
+    .accounts({
+      case: casePDA,
+      voterRecord: recordPDA,
+      dispute: disputePDA,
+      court: courtPDA,
+      courtAuthority: protocolPDA,
+      payer: provider.publicKey,
+      systemProgram: SystemProgram.programId,
+    })
+    .rpc();
 }

@@ -4,7 +4,7 @@ import { useAnchorWallet, useConnection } from "@solana/wallet-adapter-react";
 import getClaims from "../utils/get-claims";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import claimAll from "../utils/claim-all"
+import claimAll from "../utils/claim-all";
 import { toast } from "react-toastify";
 
 const Claim = () => {
@@ -74,7 +74,9 @@ const Claim = () => {
               <span className="text-purple-500 text-xl"> SOL</span>
             </div>
           </div>
-          <Button className="w-20 h-12" onClick={handleClaim}>Claim</Button>
+          <Button className="w-20 h-12" onClick={handleClaim} disabled={claims.length === 0}>
+            Claim
+          </Button>
         </div>
       </div>
 

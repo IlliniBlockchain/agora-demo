@@ -1,4 +1,3 @@
-// Return all tokens to be displayed on the home page
 import * as anchor from "@coral-xyz/anchor";
 import { AnchorProvider } from "@coral-xyz/anchor";
 import {
@@ -12,12 +11,12 @@ import getAgoraProgram from "./get-agora-program";
 import { Buffer } from "buffer";
 import getDisputeStatus from "./get-dispute-status";
 
+// ETL a user's claim queue for frontend
 export default async function getClaims(connection, wallet) {
   const commitment = "processed";
   const provider = new AnchorProvider(connection, wallet, {
     preflightCommitment: commitment,
   });
-  //---------
 
   const agoraProgram = await getAgoraProgram(provider);
   const demoProgram = await getDemoProgram(provider);

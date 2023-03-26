@@ -1,4 +1,3 @@
-// Vote for either yes (0) or no (1) ik its the opposite of binary im just 0 indexing for simplicity
 import { WalletNotConnectedError } from "@solana/wallet-adapter-base";
 import * as anchor from "@coral-xyz/anchor";
 import { AnchorProvider } from "@coral-xyz/anchor";
@@ -13,6 +12,7 @@ import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
 } from "@solana/spl-token";
 
+// Close (if necessary) and claim all expired disputes
 export default async function claimAll(claims, connection, wallet) {
   const commitment = "processed";
   if (!wallet || !wallet.publicKey) throw new WalletNotConnectedError();
@@ -92,6 +92,8 @@ export default async function claimAll(claims, connection, wallet) {
   }
 
   for (let claim of claims) {
+    if (claim.status === "In Progress") break;
+
     const [disputePDA] = PublicKey.findProgramAddressSync(
       [
         anchor.utils.bytes.utf8.encode("dispute"),
@@ -108,19 +110,20 @@ export default async function claimAll(claims, connection, wallet) {
       TOKEN_PROGRAM_ID,
       ASSOCIATED_TOKEN_PROGRAM_ID
     );
-    
+
     let disputeState = await agoraProgram.account.dispute.fetch(disputePDA);
+
     if (!disputeState.status.concluded) {
-        tx.add(
-            await agoraProgram.methods
-              .closeDispute(claim.disputeId)
-              .accounts({
-                dispute: disputePDA,
-                court: courtPDA,
-                payer: provider.publicKey
-              })
-              .instruction()
-          );
+      tx.add(
+        await agoraProgram.methods
+          .closeDispute(claim.disputeId)
+          .accounts({
+            dispute: disputePDA,
+            court: courtPDA,
+            payer: provider.publicKey,
+          })
+          .instruction()
+      );
     }
 
     tx.add(

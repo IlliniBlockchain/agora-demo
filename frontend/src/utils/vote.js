@@ -1,4 +1,3 @@
-// Vote for either yes (0) or no (1) ik its the opposite of binary im just 0 indexing for simplicity
 import { WalletNotConnectedError } from '@solana/wallet-adapter-base';
 import * as anchor from "@coral-xyz/anchor";
 import {AnchorProvider} from '@coral-xyz/anchor';
@@ -8,6 +7,7 @@ import getAgoraProgram from './get-agora-program';
 import { Buffer } from "buffer";
 import { TOKEN_PROGRAM_ID, getAssociatedTokenAddressSync, createAssociatedTokenAccountInstruction, ASSOCIATED_TOKEN_PROGRAM_ID } from '@solana/spl-token';
 
+// Vote to either Approve (optionNo=0) or Deny (optionNo=1) 
 export default async function vote(optionNo, disputeId, connection, wallet) {
     const commitment = "processed";
     if (!wallet || !wallet.publicKey) throw new WalletNotConnectedError();

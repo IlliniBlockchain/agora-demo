@@ -1,3 +1,4 @@
+// Return a string indicating the true status of a dispute
 const getDisputeStatus = (disputeState) => {
   let challengeEndTime = disputeState.config.endsAt.toNumber();
 
@@ -27,7 +28,7 @@ const getDisputeStatus = (disputeState) => {
     return "Voting";
   }
 
-  return ""
+  return "";
 };
 
-export default getDisputeStatus
+export default getDisputeStatus;
