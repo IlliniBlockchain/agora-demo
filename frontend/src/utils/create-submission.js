@@ -1,14 +1,12 @@
 import { WalletNotConnectedError } from "@solana/wallet-adapter-base";
-import {
-  SystemProgram,
-  Transaction,
-  PublicKey,
-} from "@solana/web3.js";
+import { SystemProgram, Transaction, PublicKey, LAMPORTS_PER_SOL } from "@solana/web3.js";
 import {
   TOKEN_PROGRAM_ID,
   getAssociatedTokenAddressSync,
   createAssociatedTokenAccountInstruction,
   ASSOCIATED_TOKEN_PROGRAM_ID,
+  NATIVE_MINT,
+  createSyncNativeInstruction
 } from "@solana/spl-token";
 import { AnchorProvider } from "@coral-xyz/anchor";
 import * as anchor from "@coral-xyz/anchor";
@@ -83,6 +81,77 @@ export default async function createSubmission(
     ASSOCIATED_TOKEN_PROGRAM_ID
   );
 
+  let receiver = await connection.getAccountInfo(repVault);
+
+  if (!receiver) {
+    tx.add(
+      createAssociatedTokenAccountInstruction(
+        provider.publicKey,
+        repVault,
+        disputePDA,
+        repMintPDA,
+        TOKEN_PROGRAM_ID,
+        ASSOCIATED_TOKEN_PROGRAM_ID
+      )
+    );
+  }
+
+  const payVault = getAssociatedTokenAddressSync(
+    NATIVE_MINT,
+    disputePDA,
+    true,
+    TOKEN_PROGRAM_ID,
+    ASSOCIATED_TOKEN_PROGRAM_ID
+  );
+
+  receiver = await connection.getAccountInfo(payVault);
+
+  if (!receiver) {
+    tx.add(
+      createAssociatedTokenAccountInstruction(
+        provider.publicKey,
+        payVault,
+        disputePDA,
+        NATIVE_MINT,
+        TOKEN_PROGRAM_ID,
+        ASSOCIATED_TOKEN_PROGRAM_ID
+      )
+    );
+  }
+
+  //converting SOL to wSOL
+  const userPayAcc = getAssociatedTokenAddressSync(
+    NATIVE_MINT,
+    provider.publicKey,
+    false,
+    TOKEN_PROGRAM_ID,
+    ASSOCIATED_TOKEN_PROGRAM_ID
+  );
+
+  receiver = await connection.getAccountInfo(userPayAcc);
+
+  if (!receiver) {
+    tx.add(
+      createAssociatedTokenAccountInstruction(
+        provider.publicKey,
+        userPayAcc,
+        provider.publicKey,
+        NATIVE_MINT,
+        TOKEN_PROGRAM_ID,
+        ASSOCIATED_TOKEN_PROGRAM_ID
+      )
+    );
+  }
+
+  tx.add(
+    SystemProgram.transfer({
+      fromPubkey: provider.publicKey,
+      toPubkey: userPayAcc,
+      lamports: 2 * LAMPORTS_PER_SOL,
+    }),
+    createSyncNativeInstruction(userPayAcc)
+  );
+
   //needs to have 100 tokens at least
   const protocolRepATA = getAssociatedTokenAddressSync(
     repMintPDA,
@@ -92,56 +161,20 @@ export default async function createSubmission(
     ASSOCIATED_TOKEN_PROGRAM_ID
   );
 
-  let receiver = await connection.getAccountInfo(protocolRepATA);
+  receiver = await connection.getAccountInfo(protocolRepATA);
 
-  if (receiver == null) {
+  if (!receiver) {
     tx.add(
       createAssociatedTokenAccountInstruction(
         provider.publicKey,
         protocolRepATA,
         protocolPDA,
-        repMintPDA
+        repMintPDA,
+        TOKEN_PROGRAM_ID,
+        ASSOCIATED_TOKEN_PROGRAM_ID
       )
     );
   }
-
-  //mint to token account
-  tx.add(
-    await demoProgram.methods
-      .receiveTokens()
-      .accounts({
-        protocol: protocolPDA,
-        repMint: repMintPDA,
-        payer: provider.publicKey,
-        tokenAcc: protocolRepATA,
-        tokenProgram: TOKEN_PROGRAM_ID,
-        systemProgram: SystemProgram.programId,
-      })
-      .instruction()
-  );
-
-  tx.add(
-    await demoProgram.methods
-      .submitToken(address, imageURL, name, ticker, description, [
-        "Token",
-        "Demo",
-      ])
-      .accounts({
-        protocol: protocolPDA,
-        repMint: repMintPDA,
-        tickerAcc: tickerAccPDA,
-        courtPda: courtPDA,
-        disputePda: disputePDA,
-        repVault: repVault,
-        protocolRepAta: protocolRepATA,
-        payer: provider.publicKey,
-        agoraProgram: agoraProgram.programId,
-        tokenProgram: TOKEN_PROGRAM_ID,
-        associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
-        systemProgram: SystemProgram.programId,
-      })
-      .instruction()
-  );
 
   const [recordPDA] = PublicKey.findProgramAddressSync(
     [
@@ -152,46 +185,9 @@ export default async function createSubmission(
     agoraProgram.programId
   );
 
-  let recordAcc = await connection.getAccountInfo(recordPDA);
+  const recordAcc = await connection.getAccountInfo(recordPDA);
 
-  const userATA = getAssociatedTokenAddressSync(
-    repMintPDA,
-    provider.publicKey,
-    false,
-    TOKEN_PROGRAM_ID,
-    ASSOCIATED_TOKEN_PROGRAM_ID
-  );
-
-  receiver = await connection.getAccountInfo(userATA);
-
-  if (receiver == null) {
-    tx.add(
-      createAssociatedTokenAccountInstruction(
-        provider.publicKey,
-        userATA,
-        provider.publicKey,
-        repMintPDA
-      )
-    );
-  }
-
-  //receive tokens for stake
-  tx.add(
-    await demoProgram.methods
-      .receiveTokens()
-      .accounts({
-        protocol: protocolPDA,
-        repMint: repMintPDA,
-        payer: provider.publicKey,
-        tokenAcc: userATA,
-        tokenProgram: TOKEN_PROGRAM_ID,
-        systemProgram: SystemProgram.programId,
-      })
-      .instruction()
-  );
-
-  //also init record & interact here
-  if (recordAcc == null) {
+  if (!recordAcc) {
     tx.add(
       await agoraProgram.methods
         .initializeRecord()
@@ -206,25 +202,26 @@ export default async function createSubmission(
     );
   }
 
-  //interact
   tx.add(
-    await agoraProgram.methods
-      .interact(courtState.numDisputes)
+    await demoProgram.methods
+      .submitToken(address, imageURL, name, ticker, description, ["Verified"])
       .accounts({
-        dispute: disputePDA,
-        repVault: repVault,
-        payVault: agoraProgram.programId, //None
-        record: recordPDA,
-        court: courtPDA,
-        courtAuthority: protocolPDA,
-        user: provider.publicKey, //signer
-        userPayAta: agoraProgram.programId, //None
-        userRepAta: userATA,
+        protocol: protocolPDA,
+        protocolRepAta: protocolRepATA,
         repMint: repMintPDA,
-        payMint: agoraProgram.programId, //None
-        systemProgram: SystemProgram.programId,
+        payMint: NATIVE_MINT,
+        tickerAcc: tickerAccPDA,
+        courtPda: courtPDA,
+        disputePda: disputePDA,
+        repVault: repVault,
+        payVault: payVault,
+        payer: provider.publicKey,
+        recordPda: recordPDA,
+        userPayAta: userPayAcc,
+        agoraProgram: agoraProgram.programId,
         tokenProgram: TOKEN_PROGRAM_ID,
         associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
+        systemProgram: SystemProgram.programId,
       })
       .instruction()
   );

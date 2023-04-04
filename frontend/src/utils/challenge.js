@@ -1,6 +1,6 @@
 import { WalletNotConnectedError } from "@solana/wallet-adapter-base";
 import * as anchor from "@coral-xyz/anchor";
-import { SystemProgram, Transaction, PublicKey } from "@solana/web3.js";
+import { SystemProgram, Transaction, PublicKey, LAMPORTS_PER_SOL } from "@solana/web3.js";
 import { AnchorProvider } from "@coral-xyz/anchor";
 import getDemoProgram from "./get-demo-program";
 import getAgoraProgram from "./get-agora-program";
@@ -10,6 +10,8 @@ import {
   TOKEN_PROGRAM_ID,
   getAssociatedTokenAddressSync,
   createAssociatedTokenAccountInstruction,
+  NATIVE_MINT,
+  createSyncNativeInstruction
 } from "@solana/spl-token";
 
 // Challenge an existing submission
@@ -93,7 +95,7 @@ export default async function challenge(
   );
 
   //create ata if needed
-  const receiver = await connection.getAccountInfo(userATA);
+  let receiver = await connection.getAccountInfo(userATA);
 
   if (receiver == null) {
     tx.add(
@@ -106,22 +108,47 @@ export default async function challenge(
     );
   }
 
-  //receive tokens for stake
-  tx.add(
-    await demoProgram.methods
-      .receiveTokens()
-      .accounts({
-        protocol: protocolPDA,
-        repMint: repMintPDA,
-        payer: provider.publicKey,
-        tokenAcc: userATA,
-        tokenProgram: TOKEN_PROGRAM_ID,
-        systemProgram: SystemProgram.programId,
-      })
-      .instruction()
+  const payVault = getAssociatedTokenAddressSync(
+    NATIVE_MINT,
+    disputePDA,
+    true,
+    TOKEN_PROGRAM_ID,
+    ASSOCIATED_TOKEN_PROGRAM_ID
   );
 
-  const repVaultATA = getAssociatedTokenAddressSync(
+  const userPayAcc = getAssociatedTokenAddressSync(
+    NATIVE_MINT,
+    provider.publicKey,
+    false,
+    TOKEN_PROGRAM_ID,
+    ASSOCIATED_TOKEN_PROGRAM_ID
+  );
+
+  receiver = await connection.getAccountInfo(userPayAcc);
+
+  if (!receiver) {
+    tx.add(
+      createAssociatedTokenAccountInstruction(
+        provider.publicKey,
+        userPayAcc,
+        provider.publicKey,
+        NATIVE_MINT,
+        TOKEN_PROGRAM_ID,
+        ASSOCIATED_TOKEN_PROGRAM_ID
+      )
+    );
+  }
+
+  tx.add(
+    SystemProgram.transfer({
+      fromPubkey: provider.publicKey,
+      toPubkey: userPayAcc,
+      lamports: 2 * LAMPORTS_PER_SOL,
+    }),
+    createSyncNativeInstruction(userPayAcc)
+  );
+
+  const repVault = getAssociatedTokenAddressSync(
     repMintPDA,
     disputePDA,
     true,
@@ -135,16 +162,16 @@ export default async function challenge(
       .interact(id_bn)
       .accounts({
         dispute: disputePDA,
-        repVault: repVaultATA,
-        payVault: agoraProgram.programId, //None
+        repVault,
+        payVault,
         record: recordPDA,
         court: courtPDA,
         courtAuthority: protocolPDA,
         user: provider.publicKey, //signer
-        userPayAta: agoraProgram.programId, //None
+        userPayAta: userPayAcc,
         userRepAta: userATA,
         repMint: repMintPDA,
-        payMint: agoraProgram.programId, //None
+        payMint: NATIVE_MINT,
         systemProgram: SystemProgram.programId,
         tokenProgram: TOKEN_PROGRAM_ID,
         associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,

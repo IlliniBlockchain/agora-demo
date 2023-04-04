@@ -18,13 +18,13 @@ import axios from "axios";
 import FormData from "form-data";
 import createSubmission from "../utils/create-submission";
 import { toast } from "react-toastify";
-import { useAnchorWallet, useConnection } from '@solana/wallet-adapter-react';
+import { useAnchorWallet, useConnection } from "@solana/wallet-adapter-react";
 
 const Header = () => {
   const [popup, setPopup] = useState(false);
   const [image, setImage] = useState("");
 
-  const {connection} = useConnection();
+  const { connection } = useConnection();
   const wallet = useAnchorWallet();
 
   const name = useRef();
@@ -65,6 +65,22 @@ const Header = () => {
         return;
       }
 
+      if (
+        description.current.value.length > 200
+      ) {
+        toast.error("Please limit description to 200 characters.", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        return;
+      }
+
       let file = await fetch(image).then((r) => r.blob());
 
       let data = new FormData();
@@ -73,7 +89,15 @@ const Header = () => {
         .data;
       let logoURL = `https://agora-courts.infura-ipfs.io/ipfs/${cid}`;
 
-      await createSubmission(name.current.value, address.current.value, ticker.current.value, description.current.value, logoURL, connection, wallet);
+      await createSubmission(
+        name.current.value,
+        address.current.value,
+        ticker.current.value,
+        description.current.value,
+        logoURL,
+        connection,
+        wallet
+      );
 
       toast.success("Token successfully submitted.", {
         position: "top-right",
@@ -86,7 +110,16 @@ const Header = () => {
         theme: "light",
       });
     } catch (e) {
-      alert(e);
+      toast.error(e.message, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
     }
   };
 
@@ -183,7 +216,7 @@ const Header = () => {
                 </div>
                 <h2 className="text-black text-lg font-bold flex justify-between">
                   <span>Deposit Due:</span>
-                  <span>10 AGORA</span>
+                  <span>2.0 SOL</span>
                 </h2>
                 <Alert color="info">
                   <span>
@@ -205,12 +238,19 @@ const Header = () => {
         <Navbar.Link href="/" active={location.pathname == "/"}>
           Home
         </Navbar.Link>
-        <Navbar.Link href="https://docs.agoracourts.com/products/agora-tokens" target="_blank">Tutorial</Navbar.Link>
-        <Navbar.Link href="https://docs.agoracourts.com/products/agora-tokens/token-criteria" target="_blank">Criteria</Navbar.Link>
         <Navbar.Link
-          href="/claim"
-          active={location.pathname == "/claim"}
+          href="https://docs.agoracourts.com/products/agora-tokens"
+          target="_blank"
         >
+          Tutorial
+        </Navbar.Link>
+        <Navbar.Link
+          href="https://docs.agoracourts.com/products/agora-tokens/token-criteria"
+          target="_blank"
+        >
+          Criteria
+        </Navbar.Link>
+        <Navbar.Link href="/claim" active={location.pathname == "/claim"}>
           Claim
         </Navbar.Link>
       </Navbar.Collapse>

@@ -35,7 +35,16 @@ const Claim = () => {
         theme: "light",
       });
     } catch (err) {
-      alert(err);
+      toast.error(err.message, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
     }
   };
 
@@ -74,7 +83,11 @@ const Claim = () => {
               <span className="text-purple-500 text-xl"> SOL</span>
             </div>
           </div>
-          <Button className="w-20 h-12" onClick={handleClaim} disabled={claims.length === 0}>
+          <Button
+            className="w-20 h-12"
+            onClick={handleClaim}
+            disabled={claims.length === 0 || claims[0].status === 'In Progress'}
+          >
             Claim
           </Button>
         </div>

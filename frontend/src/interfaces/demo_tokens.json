@@ -16,37 +16,6 @@
           "isSigner": false
         },
         {
-          "name": "payer",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "createCourt",
-      "accounts": [
-        {
-          "name": "protocol",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "repMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
           "name": "courtPda",
           "isMut": true,
           "isSigner": false
@@ -83,8 +52,18 @@
           "isSigner": false
         },
         {
+          "name": "protocolRepAta",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
           "name": "repMint",
           "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "payMint",
+          "isMut": false,
           "isSigner": false
         },
         {
@@ -108,7 +87,7 @@
           "isSigner": false
         },
         {
-          "name": "protocolRepAta",
+          "name": "payVault",
           "isMut": true,
           "isSigner": false
         },
@@ -116,6 +95,16 @@
           "name": "payer",
           "isMut": true,
           "isSigner": true
+        },
+        {
+          "name": "recordPda",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "userPayAta",
+          "isMut": true,
+          "isSigner": false
         },
         {
           "name": "agoraProgram",
@@ -168,7 +157,7 @@
       ]
     },
     {
-      "name": "receiveTokens",
+      "name": "tokenVote",
       "accounts": [
         {
           "name": "protocol",
@@ -181,17 +170,52 @@
           "isSigner": false
         },
         {
-          "name": "payer",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "tokenAcc",
+          "name": "casePda",
           "isMut": true,
           "isSigner": false
         },
         {
+          "name": "recordPda",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "courtPda",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "disputePda",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "repVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "payer",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "userRepAta",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "agoraProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
           "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "associatedTokenProgram",
           "isMut": false,
           "isSigner": false
         },
@@ -201,7 +225,16 @@
           "isSigner": false
         }
       ],
-      "args": []
+      "args": [
+        {
+          "name": "candidate",
+          "type": "publicKey"
+        },
+        {
+          "name": "id",
+          "type": "u64"
+        }
+      ]
     }
   ],
   "accounts": [
@@ -257,6 +290,6 @@
     }
   ],
   "metadata": {
-    "address": "8oxb3Kg4kda7LCJoSUVHAZhoqWjmBiLnGZeCyUkJJ22L"
+    "address": "Fx47ugR8zmke83hwzFHfgS5PKZN2wXeX1aP3g7DbS9r"
   }
 }

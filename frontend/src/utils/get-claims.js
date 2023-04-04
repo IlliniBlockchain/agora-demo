@@ -43,22 +43,7 @@ export default async function getClaims(connection, wallet) {
   let recordAcc = await connection.getAccountInfo(recordPDA);
 
   if (!recordAcc) {
-    let tx = new Transaction();
-
-    tx.add(
-      await agoraProgram.methods
-        .initializeRecord()
-        .accounts({
-          record: recordPDA,
-          court: courtPDA,
-          courtAuthority: protocolPDA,
-          payer: provider.publicKey,
-          systemProgram: SystemProgram.programId,
-        })
-        .instruction()
-    );
-
-    await provider.sendAndConfirm(tx);
+    return []
   }
 
   let recordState = await agoraProgram.account.voterRecord.fetch(recordPDA);

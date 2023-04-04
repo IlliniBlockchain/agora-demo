@@ -47,6 +47,7 @@ export default async function getToken(id, connection, wallet) {
 
   //get cases
   let cases = [];
+  const TITLE = ['Submitter Evidence', 'Challenger Evidence']
   for (let i = 0; i < disputeState.users.length; i++) {
     let user = disputeState.users[i];
     if (user) {
@@ -65,7 +66,8 @@ export default async function getToken(id, connection, wallet) {
         let caseState = await agoraProgram.account.case.fetch(casePDA);
 
         cases.push({
-          timestamp: "Mon, 08 Aug 2022 23:13:34 GMT",
+          title: TITLE[i],
+          pk: user.toString(),
           evidence: caseState.evidence,
         });
       }
@@ -103,6 +105,22 @@ export default async function getToken(id, connection, wallet) {
 
   let status = getDisputeStatus(disputeState);
 
+  if (status === "Concluded") {
+    if (disputeState.leader.user.equals(disputeState.users[0])) {
+      cases.unshift({
+        title: "Verification Successful",
+        pk: "Final Court Verdict",
+        evidence: "The jury majority has sided with the submitter. This token was approved and added to the Agora Token list.",
+      });
+    } else {
+      cases.unshift({
+        title: "Verification Failed",
+        pk: "Final Court Verdict",
+        evidence: "The jury majority has sided with the challenger. This token was denied and rejected from the Agora Token list.",
+      });
+    }
+  }
+
   return {
     disputeId: id,
     image: tickerState.image,
@@ -115,7 +133,7 @@ export default async function getToken(id, connection, wallet) {
     rep_risked: disputeState.config.voterRepCost.toNumber().toString(),
     status: status, // "Voting"
     end_time: dt,
-    requester: "FRX2QB33XRWuQfR6Ehb4YWWW6ihurNNDqYhL12XvzeKG",
+    requester: disputeState.users[0].toString(),
     cases: cases,
     address: tickerState.address,
   };

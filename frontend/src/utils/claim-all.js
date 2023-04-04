@@ -10,6 +10,7 @@ import {
   getAssociatedTokenAddressSync,
   createAssociatedTokenAccountInstruction,
   ASSOCIATED_TOKEN_PROGRAM_ID,
+  NATIVE_MINT
 } from "@solana/spl-token";
 
 // Close (if necessary) and claim all expired disputes
@@ -76,7 +77,7 @@ export default async function claimAll(claims, connection, wallet) {
     ASSOCIATED_TOKEN_PROGRAM_ID
   );
 
-  const receiver = await connection.getAccountInfo(userRepATA);
+  let receiver = await connection.getAccountInfo(userRepATA);
 
   if (!receiver) {
     tx.add(
@@ -85,6 +86,29 @@ export default async function claimAll(claims, connection, wallet) {
         userRepATA,
         provider.publicKey,
         repMintPDA,
+        TOKEN_PROGRAM_ID,
+        ASSOCIATED_TOKEN_PROGRAM_ID
+      )
+    );
+  }
+
+  const userPayAcc = getAssociatedTokenAddressSync(
+    NATIVE_MINT,
+    provider.publicKey,
+    false,
+    TOKEN_PROGRAM_ID,
+    ASSOCIATED_TOKEN_PROGRAM_ID
+  );
+
+  receiver = await connection.getAccountInfo(userPayAcc);
+
+  if (!receiver) {
+    tx.add(
+      createAssociatedTokenAccountInstruction(
+        provider.publicKey,
+        userPayAcc,
+        provider.publicKey,
+        NATIVE_MINT,
         TOKEN_PROGRAM_ID,
         ASSOCIATED_TOKEN_PROGRAM_ID
       )
@@ -103,6 +127,14 @@ export default async function claimAll(claims, connection, wallet) {
       agoraProgram.programId
     );
 
+    const payVault = getAssociatedTokenAddressSync(
+      NATIVE_MINT,
+      disputePDA,
+      true,
+      TOKEN_PROGRAM_ID,
+      ASSOCIATED_TOKEN_PROGRAM_ID
+    );
+    
     const repVault = getAssociatedTokenAddressSync(
       repMintPDA,
       disputePDA,
@@ -133,14 +165,14 @@ export default async function claimAll(claims, connection, wallet) {
           voterRecord: recordPDA,
           dispute: disputePDA,
           repVault,
-          payVault: agoraProgram.programId, // None
+          payVault,
           court: courtPDA,
           courtAuthority: protocolPDA,
           user: provider.publicKey,
-          userPayAta: agoraProgram.programId, // None
+          userPayAta: userPayAcc,
           userRepAta: userRepATA,
           repMint: repMintPDA,
-          payMint: agoraProgram.programId, // None
+          payMint: NATIVE_MINT,
           tokenProgram: TOKEN_PROGRAM_ID,
           systemProgram: SystemProgram.programId,
           associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,

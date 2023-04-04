@@ -24,7 +24,7 @@ import isChallenged from "../utils/is-challenged";
 import initCase from "../utils/init-case";
 import { useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
-import { useAnchorWallet, useConnection } from '@solana/wallet-adapter-react';
+import { useAnchorWallet, useConnection } from "@solana/wallet-adapter-react";
 
 const Token = () => {
   const [token, setTkn] = useState({});
@@ -33,7 +33,7 @@ const Token = () => {
   const description = useRef();
   const challengeDescription = useRef();
 
-  const {connection} = useConnection();
+  const { connection } = useConnection();
   const wallet = useAnchorWallet();
 
   let location = useLocation();
@@ -49,7 +49,7 @@ const Token = () => {
   const handleVote = async (optionNo) => {
     try {
       await vote(optionNo, id, connection, wallet);
-      
+
       toast.success("Voting successful.", {
         position: "top-right",
         autoClose: 5000,
@@ -61,7 +61,16 @@ const Token = () => {
         theme: "light",
       });
     } catch (err) {
-      alert(err);
+      toast.error(err.message, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
     }
   };
 
@@ -81,7 +90,12 @@ const Token = () => {
         return;
       }
 
-      await challenge(id, challengeDescription.current.value, connection, wallet);
+      await challenge(
+        id,
+        challengeDescription.current.value,
+        connection,
+        wallet
+      );
       setTkn(await getToken(id, connection, wallet));
 
       toast.success("Challenge successfully submitted.", {
@@ -95,7 +109,16 @@ const Token = () => {
         theme: "light",
       });
     } catch (err) {
-      alert(err);
+      toast.error(err.message, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
     }
   };
 
@@ -117,7 +140,7 @@ const Token = () => {
 
       await initCase(id, description.current.value, connection, wallet);
       setTkn(await getToken(id, connection, wallet));
-      
+
       toast.success("Response successfully submitted.", {
         position: "top-right",
         autoClose: 5000,
@@ -129,7 +152,16 @@ const Token = () => {
         theme: "light",
       });
     } catch (err) {
-      alert(err);
+      toast.error(err.message, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
     }
   };
 
@@ -193,7 +225,7 @@ const Token = () => {
 
                   <h2 className="text-black text-lg font-bold flex justify-between">
                     <span>Deposit Due:</span>
-                    <span>10 AGORA</span>
+                    <span>2.0 SOL</span>
                   </h2>
                   <Alert color="info">
                     <span>
@@ -218,10 +250,10 @@ const Token = () => {
 
         <div className="flex gap-3 mt-2">
           <Badge color="success" className="w-fit" size="sm">
-            {token.agora_reward} $AGORA
+            {token.agora_reward} AGORA
           </Badge>
           <Badge color="purple" className="w-fit" size="sm">
-            {token.sol_reward} $SOL
+            {token.sol_reward} SOL
           </Badge>
         </div>
         {token.status === "Voting" ? (
@@ -234,7 +266,7 @@ const Token = () => {
             </p>
             <h2 className="text-black text-lg font-bold flex justify-between my-3">
               <span>Reputation Risked:</span>
-              <span>{token.rep_risked} AGORA</span>
+              <span>10 AGORA</span>
             </h2>
             <Alert color="info">
               <span>
@@ -268,15 +300,15 @@ const Token = () => {
               : ""}
           </Badge>
         </div>
-        <h2 className="text-2xl font-semibold mt-2">Request History</h2>
+        <h2 className="text-2xl font-semibold mt-2">Submission History</h2>
         <Timeline className="ml-3">
           {token.cases ? (
             token.cases.map((c) => (
               <Timeline.Item>
                 <Timeline.Point icon={CalendarIcon} />
                 <Timeline.Content>
-                  <Timeline.Time>{c.timestamp}</Timeline.Time>
-                  <Timeline.Title>Verification Submission</Timeline.Title>
+                  <Timeline.Time>{c.pk}</Timeline.Time>
+                  <Timeline.Title>{c.title}</Timeline.Title>
                   <Timeline.Body>{c.evidence}</Timeline.Body>
                 </Timeline.Content>
               </Timeline.Item>
@@ -301,9 +333,9 @@ const Token = () => {
                 Urgent action required
               </h3>
               <p className="text-gray-600 text-sm">
-                Someone has initiated a challenge, so a jury will soon
-                vote on the validity of your submission. Please provide
-                supporting evidence for the voters to deliberate on.
+                Someone has initiated a challenge, so a jury will soon vote on
+                the validity of your submission. Please provide supporting
+                evidence for the voters to deliberate on.
               </p>
               <div id="textarea">
                 <div className="mb-2 block">
