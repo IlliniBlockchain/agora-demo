@@ -19,7 +19,8 @@ export default defineConfig({
             NodeGlobalsPolyfillPlugin({
                 buffer: true
             })
-        ]
+        ],
+        base: '/vite-deploy-demo/'
     }
 }
 })
