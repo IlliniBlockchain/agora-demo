@@ -20,7 +20,7 @@ export default defineConfig({
                 buffer: true
             })
         ],
-        base: '/vite-deploy-demo/'
+        base: '/agora-tokens/'
     }
 }
 })
