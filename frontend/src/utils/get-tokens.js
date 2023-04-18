@@ -23,10 +23,10 @@ export default async function getTokens(connection, wallet) {
   let protState = await demoProgram.account.protocol.fetch(protocolPDA);
 
   //loop through ticker accounts
-  for (let i = protState.numTickers - 1; i >= 0; i--) {
+  for (let i = protState.numTickers.toNumber() - 1; i >= 0; i--) {
     //grab PDA
     const [tickerAccPDA] = PublicKey.findProgramAddressSync(
-      [anchor.utils.bytes.utf8.encode("ticker"), new Uint8Array([i])],
+      [anchor.utils.bytes.utf8.encode("ticker"), protState.numTickers.toArrayLike(Buffer, "be", 8)],
       demoProgram.programId
     );
 

@@ -59,7 +59,7 @@ export default async function createSubmission(
   const [tickerAccPDA] = PublicKey.findProgramAddressSync(
     [
       anchor.utils.bytes.utf8.encode("ticker"),
-      new Uint8Array([protState.numTickers]),
+      protState.numTickers.toArrayLike(Buffer, "be", 8),
     ],
     demoProgram.programId
   );

@@ -137,10 +137,11 @@ export default async function vote(optionNo, disputeId, connection, wallet) {
 
   tx.add(
     await demoProgram.methods
-      .tokenVote(candidate, id_bn)
+      .tokenVote(id_bn)
       .accounts({
         protocol: protocolPDA,
         repMint: repMintPDA,
+        candidate: candidate,
         casePda: casePDA,
         recordPda: recordPDA,
         courtPda: courtPDA,

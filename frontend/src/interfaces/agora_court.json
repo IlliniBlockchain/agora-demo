@@ -380,6 +380,82 @@
       ]
     },
     {
+      "name": "selectVote",
+      "accounts": [
+        {
+          "name": "case",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "candidate",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "voterRecord",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "dispute",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "repVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "court",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "repMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "courtAuthority",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "userRepAta",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "disputeId",
+          "type": "u64"
+        }
+      ]
+    },
+    {
       "name": "initializeRecord",
       "accounts": [
         {
@@ -409,81 +485,6 @@
         }
       ],
       "args": []
-    },
-    {
-      "name": "vote",
-      "accounts": [
-        {
-          "name": "case",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "voterRecord",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "dispute",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "repVault",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "court",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "courtAuthority",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "userRepAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "repMint",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "disputeId",
-          "type": "u64"
-        },
-        {
-          "name": "userCase",
-          "type": "publicKey"
-        }
-      ]
     }
   ],
   "accounts": [
@@ -853,6 +854,6 @@
     }
   ],
   "metadata": {
-    "address": "Benri2piS4b4h5S54uaMRybuhhZtbM4L3zofhd3Y9FXv"
+    "address": "ABkQZCq2qh32X75A5FjaT8FGRWEqujPiBV3wJZEmzuEX"
   }
 }

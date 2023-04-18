@@ -26,12 +26,12 @@ export default async function getToken(id, connection, wallet) {
     agoraProgram.programId
   );
 
+  let id_bn = new anchor.BN(id);
+
   const [tickerAccPDA] = PublicKey.findProgramAddressSync(
-    [anchor.utils.bytes.utf8.encode("ticker"), new Uint8Array([id])],
+    [anchor.utils.bytes.utf8.encode("ticker"), id_bn.toArrayLike(Buffer, "be", 8)],
     demoProgram.programId
   );
-
-  let id_bn = new anchor.BN(id);
 
   const [disputePDA] = PublicKey.findProgramAddressSync(
     [

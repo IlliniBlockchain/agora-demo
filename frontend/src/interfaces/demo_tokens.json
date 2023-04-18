@@ -170,6 +170,11 @@
           "isSigner": false
         },
         {
+          "name": "candidate",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
           "name": "casePda",
           "isMut": true,
           "isSigner": false
@@ -227,10 +232,6 @@
       ],
       "args": [
         {
-          "name": "candidate",
-          "type": "publicKey"
-        },
-        {
           "name": "id",
           "type": "u64"
         }
@@ -249,7 +250,7 @@
           },
           {
             "name": "numTickers",
-            "type": "u8"
+            "type": "u64"
           }
         ]
       }
@@ -290,6 +291,6 @@
     }
   ],
   "metadata": {
-    "address": "Fx47ugR8zmke83hwzFHfgS5PKZN2wXeX1aP3g7DbS9r"
+    "address": "ABGSi2xFcgb24Pq4N9QtZhSbSzgQWGCSpRohLUiF8puJ"
   }
 }
