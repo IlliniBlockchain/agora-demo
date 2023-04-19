@@ -3,7 +3,6 @@ import getAgoraProgram from "./get-agora-program";
 import { LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
 import * as anchor from "@coral-xyz/anchor";
 import getDemoProgram from "./get-demo-program";
-import { Buffer } from "buffer";
 import getDisputeStatus from "./get-dispute-status";
 
 // Return a specific tokens details

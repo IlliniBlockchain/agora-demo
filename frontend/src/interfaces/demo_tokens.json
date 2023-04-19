@@ -170,6 +170,11 @@
           "isSigner": false
         },
         {
+          "name": "candidate",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
           "name": "casePda",
           "isMut": true,
           "isSigner": false
@@ -226,10 +231,6 @@
         }
       ],
       "args": [
-        {
-          "name": "candidate",
-          "type": "publicKey"
-        },
         {
           "name": "id",
           "type": "u64"

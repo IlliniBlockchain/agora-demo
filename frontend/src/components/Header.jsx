@@ -19,6 +19,7 @@ import FormData from "form-data";
 import createSubmission from "../utils/create-submission";
 import { toast } from "react-toastify";
 import { useAnchorWallet, useConnection } from "@solana/wallet-adapter-react";
+import { Link } from "react-router-dom";
 
 const Header = () => {
   const [popup, setPopup] = useState(false);
@@ -82,13 +83,13 @@ const Header = () => {
       }
 
       let file = await fetch(image).then((r) => r.blob());
-
+      console.log('uploading to IPFS')
       let data = new FormData();
       data.append("logo", file);
-      let cid = (await axios.post("http://localhost:5001/api/upload", data))
+      let cid = (await axios.post("https://agora-tokens.onrender.com/api/upload", data))
         .data;
       let logoURL = `https://agora-courts.infura-ipfs.io/ipfs/${cid}`;
-
+      console.log('uploaded')
       await createSubmission(
         name.current.value,
         address.current.value,
@@ -110,6 +111,7 @@ const Header = () => {
         theme: "light",
       });
     } catch (e) {
+      console.log(e)
       toast.error(e.message, {
         position: "top-right",
         autoClose: 5000,
@@ -235,9 +237,9 @@ const Header = () => {
         <WalletMultiButton />
       </div>
       <Navbar.Collapse>
-        <Navbar.Link href="/" active={location.pathname == "/"}>
+        <Link to="/" className="text-gray-700">
           Home
-        </Navbar.Link>
+        </Link>
         <Navbar.Link
           href="https://docs.agoracourts.com/products/agora-tokens"
           target="_blank"
@@ -250,9 +252,9 @@ const Header = () => {
         >
           Criteria
         </Navbar.Link>
-        <Navbar.Link href="/claim" active={location.pathname == "/claim"}>
+        <Link to="/claim" className="text-gray-700">
           Claim
-        </Navbar.Link>
+        </Link>
       </Navbar.Collapse>
     </Navbar>
   );

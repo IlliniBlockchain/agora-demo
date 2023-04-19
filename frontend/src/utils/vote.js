@@ -2,7 +2,6 @@ import { WalletNotConnectedError } from "@solana/wallet-adapter-base";
 import * as anchor from "@coral-xyz/anchor";
 import { AnchorProvider } from "@coral-xyz/anchor";
 import {
-  Keypair,
   SystemProgram,
   Transaction,
   PublicKey,
@@ -137,10 +136,11 @@ export default async function vote(optionNo, disputeId, connection, wallet) {
 
   tx.add(
     await demoProgram.methods
-      .tokenVote(candidate, id_bn)
+      .tokenVote(id_bn)
       .accounts({
         protocol: protocolPDA,
         repMint: repMintPDA,
+        candidate,
         casePda: casePDA,
         recordPda: recordPDA,
         courtPda: courtPDA,

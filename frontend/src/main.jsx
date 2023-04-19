@@ -10,7 +10,8 @@ import {
 import ErrorPage from "./routes/error";
 import Token from "./routes/token";
 import Root from "./routes/root";
-
+import { Buffer } from "buffer";
+globalThis.Buffer = Buffer
 
 const router = createBrowserRouter([
   {

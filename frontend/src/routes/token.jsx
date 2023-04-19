@@ -61,6 +61,7 @@ const Token = () => {
         theme: "light",
       });
     } catch (err) {
+      console.log(err)
       toast.error(err.message, {
         position: "top-right",
         autoClose: 5000,
@@ -190,7 +191,7 @@ const Token = () => {
             <Button color="gray">Add Badge</Button>
           </div>
           <React.Fragment>
-            <Button color="gray" onClick={() => setPopup(true)}>
+            <Button color="gray" onClick={() => setPopup(true)} disabled={token.status !== "Submitted"}>
               Challenge Post
             </Button>
             <Modal

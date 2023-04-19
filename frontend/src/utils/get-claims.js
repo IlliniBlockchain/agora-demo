@@ -68,7 +68,7 @@ export default async function getClaims(connection, wallet) {
       ],
       agoraProgram.programId
     );
-
+    
     let disputeState = await agoraProgram.account.dispute.fetch(disputePDA);
     let status = "In Progress";
     let repChange = 0;
@@ -84,11 +84,11 @@ export default async function getClaims(connection, wallet) {
         } else {
           status = "Voted Majority";
 
-          payPool =
+          let payPool =
             (disputeState.users.length - 1) *
               disputeState.config.payCost.toNumber() +
             disputeState.config.protocolPay.toNumber();
-          repPool =
+          let repPool =
             (disputeState.users.length - 1) *
               disputeState.config.repCost.toNumber() +
             disputeState.config.protocolRep.toNumber() +
